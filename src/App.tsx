@@ -14,11 +14,19 @@ const MathColor = (c1: Color) => {
 };
 
 const ReverseMathColor = (c1: Color) => {
-  return { r: c1.r * 255, g: c1.g * 255, b: c1.b * 255 };
+  return {
+    r: Math.ceil(c1.r * 255),
+    g: Math.ceil(c1.g * 255),
+    b: Math.ceil(c1.b * 255)
+  };
 };
 
 const Add = (c1: Color, c2: Color) => {
-  return { r: c1.r + c2.r, g: c1.g + c2.g, b: c1.b + c2.b };
+  return {
+    r: Math.min(c1.r + c2.r, 1),
+    g: Math.min(c1.g + c2.g, 1),
+    b: Math.min(c1.b + c2.b, 1)
+  };
 };
 
 const GetPositionFromColumn = (
@@ -65,18 +73,37 @@ export default function App() {
       DefalutRectSize(p)
     );
 
-    const multiplyColor = ReverseMathColor(
+    const resultColor = ReverseMathColor(
       Add(MathColor(data[0].Color1), MathColor(data[0].Color2))
     );
-    p.fill(multiplyColor.r, multiplyColor.g, multiplyColor.b);
+    p.fill(resultColor.r, resultColor.g, resultColor.b);
+
     p.rect(
-      p.windowWidth / 1.5,
-      p.height / 2,
+      GetPositionFromColumn(p, 7),
+      GetPositionFromRow(p, 5),
       DefalutRectSize(p),
       DefalutRectSize(p)
     );
     p.fill("#000");
 
+    p.textSize(p.width / 40);
+    p.text(
+      `(${data[0].Color1.r},${data[0].Color1.g},${data[0].Color1.b})`,
+      GetPositionFromColumn(p, 2),
+      GetPositionFromRow(p, 4)
+    );
+    p.text(
+      `(${data[0].Color2.r},${data[0].Color2.g},${data[0].Color2.b})`,
+      GetPositionFromColumn(p, 4),
+      GetPositionFromRow(p, 4)
+    );
+    p.text(
+      `(${resultColor.r},${resultColor.g},${resultColor.b})`,
+      GetPositionFromColumn(p, 7),
+      GetPositionFromRow(p, 4)
+    );
+
+    p.textSize(p.width / 20);
     p.text("×", GetPositionFromColumn(p, 3), p.height / 2);
     p.text("=", GetPositionFromColumn(p, 5.5), p.height / 2);
   };
